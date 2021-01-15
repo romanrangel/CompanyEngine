@@ -16,31 +16,47 @@ const render = require("./lib/htmlRenderer");
 const application = (inquirer.prompt([
     {
         type: "choices",
-        message: "What is your role?",
+        message: "What is the team members role?",
         name: "role",
         choices: ["Manager", "Engineer", "Intern"]
-    }, {
+    },
+    {
         type: "input",
-        message: "What is your name?",
+        message: "What is the team members name?",
         name: "name"
-    }, {
+    },
+    {
         type: "input",
-        message: "Enter your ID",
+        message: "Enter the team members ID",
         name: "id"
+    },
+    {
+        type: "input",
+        message: "Enter the team members email",
+        name: "email"
     }, {
         type: "choices",
-        message: "Would you like to add another employee?",
+        message: "Would you like to add another team member?",
         name: "restart",
         choices: ["Yes", "No"]
     }
 ]).then(data => {
-    fs.writeFile(`sampleREADME.md`, generateMarkdown(data), err => err ? console.error(err) : console.log('Success!'));
+    fs.writeFile(`team.html`, generateMarkdown(data), err => err ? console.error(err) : console.log('Success!'));
     if (data.role === "Manager") {
         inquirer.prompt([{
                 type: "input",
                 message: "What is your office number?",
                 name: "office"
             },]).then(managerData => { // build manager object
+            const manager = new Manager(`${
+                this.name
+            }, ${
+                this.id
+            }, ${
+                this.email
+            }, ${
+                this.officeNumber
+            }`)
         })
     }
     if (data.role === "Intern") {
@@ -49,6 +65,15 @@ const application = (inquirer.prompt([
                 message: "What school are you in?",
                 name: "school"
             },]).then(internData => { // build data object
+            const intern = new Intern(`${
+                this.name
+            }, ${
+                this.id
+            }, ${
+                this.email
+            }, ${
+                this.school
+            }`)
         })
     }
     if (data.role === "Engineer") {
@@ -57,6 +82,15 @@ const application = (inquirer.prompt([
                 message: "What is your github username?",
                 name: "github"
             },]).then(engineerData => { // build manager object
+            const engineer = new Engineer(`${
+                this.name
+            }, ${
+                this.id
+            }, ${
+                this.email
+            }, ${
+                this.github
+            }`)
         })
     }
     if (data.restart === "Yes") {
@@ -68,6 +102,44 @@ const application = (inquirer.prompt([
 }).catch(err => {
     console.log(err);
 }))
+
+const inquirer = require("inquirer");
+const fs = require("fs");
+inquirer 
+.prompt ([
+    {
+        type: "input",
+        message: "What is your name",
+        name: "name"
+    },
+    {
+        type: "input",
+        message: "Where are you from",
+        name: "location"
+    },
+    {
+        type: "input",
+        message: "Tell us about yourself",
+        name: "bio"
+    },
+    {
+        type: "input",
+        message: "Enter your LinkedIn username",
+        name: "linkedin"
+    },
+    {
+        type: "input",
+        message: "Enter your GitHub username",
+        name: "github"
+    }
+]) .then ( data => {
+    fs.writeFile('user.html', user(data), (err) =>
+    err ? console.error(err) : console.log('Success!')
+    );
+}) .catch( err => {
+    console.log(err);
+});
+
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
